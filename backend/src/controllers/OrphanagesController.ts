@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import Orphanage from '../models/Orphanage';
 import orphanageView from '../views/orphanages_view';
+import * as Yup from 'yup';
+
 export default {
 
   async index(request: Request, response: Response) {
@@ -39,7 +41,7 @@ export default {
       return { path: image.filename }
     })
 
-    const orphanage = orphanagesRepository.create({
+    const data = {
       name,
       latitude,
       longitude,
@@ -48,7 +50,9 @@ export default {
       opening_hours,
       open_on_weekends,
       images
-    });
+    };
+
+    const orphanage = orphanagesRepository.create(data);
 
     await orphanagesRepository.save(orphanage);
 
