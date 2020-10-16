@@ -48,7 +48,7 @@ export default {
       about,
       instructions,
       opening_hours,
-      open_on_weekends,
+      open_on_weekends: open_on_weekends === 'true',
       images
     };
 
@@ -66,7 +66,7 @@ export default {
     });
     console.log(data.open_on_weekends);
     await schema.validate(data, {
-      abortEarly: false,
+      abortEarly: false
     });
 
     const orphanage = orphanagesRepository.create(data);

@@ -5,8 +5,13 @@ import { FiPlus } from "react-icons/fi";
 import '../styles/pages/create-orphanage.css';
 import Sidebar from "../components/Sidebar";
 import mapIcon from "../utils/mapIcon";
+import api from "../services/api";
+import { useHistory } from "react-router-dom";
 
 export default function CreateOrphanage() {
+
+  const history = useHistory();
+
   const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
   const [name, setName] = useState('');
   const [about, setAbout] = useState('');
@@ -37,11 +42,26 @@ export default function CreateOrphanage() {
     setPreviewImages(selectedImagesPreview);
   }
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     const { latitude, longitude } = position;
 
-    console.log(position, name, about, instructions, opening_hours);
+    const data = new FormData();
+    data.append('name', name);
+    data.append('about', about);
+    data.append('latitude', String(latitude));
+    data.append('longitude', String(longitude));
+    data.append('instructions', instructions);
+    data.append('opening_hours', opening_hours);
+    data.append('open_on_weekends', String(open_on_weekends));
+
+    images.forEach(image => {
+      data.append('images', image);
+    });
+    await api.post('/orphanages', data);
+    alert('Cadastro realizado');
+
+    history.push('/app');
   }
 
   return (
